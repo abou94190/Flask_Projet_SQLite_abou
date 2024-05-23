@@ -77,20 +77,17 @@ def enregistrer_client():
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
 
-@app.route('/fiche_nom/')
-def fiche_nom():
-    nom = request.form['Utilisateur']
-    prenom = request.form['Mot de Passe']
-
-    # Connexion à la base de données
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-
-    # Exécution de la requête SQL pour insérer un nouveau client
-    cursor.execute('INSERT INTO clients (created, Utilisateur, Mot de Passe, adresse) VALUES (?, ?, ?, ?)', (1002938, nom, prenom, "nouveauclient"))
-    conn.commit()
-    conn.close()
-        return redirect('/consultation/'), 401
+@app.route('/fiche_nom', methods=['GET', 'POST'])
+def authentification():
+    if request.method == 'POST':
+        # Vérifier les identifiants
+        if request.form['username'] == 'user' and request.form['password'] == '12345': # password à cacher par la suite
+            session['authentifie'] = True
+            # Rediriger vers la route lecture après une authentification réussie
+            return redirect(url_for('lecture'))
+        else:
+            # Afficher un message d'erreur si les identifiants sont incorrects
+            return render_template('formulaire_authentification.html', error=True)
 
 if __name__ == "__main__":
   app.run(debug=True)
