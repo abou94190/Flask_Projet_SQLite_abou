@@ -79,20 +79,21 @@ def enregistrer_client():
 @app.route('/fiche_nom', methods=['GET', 'POST'])
 def fiche_nom():
     if request.method == 'POST':
-        # Vérifier les identifiants de l'utilisateur
         if request.form['username'] == 'user' and request.form['password'] == '12345':
             session['authentifie_user'] = True
-            return "<h2>Bienvenue sur la page fiche_nom</h2>"
+            nom = request.form['nom']
+            conn = sqlite3.connect('database.db')
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM clients WHERE nom = ?', (nom,))
+            data = cursor.fetchall()
+            conn.close()
+            return render_template('resultat_recherche.html', data=data)
         else:
-            # Afficher un message d'erreur si les identifiants sont incorrects
             return render_template('formulaire_authentification_user.html', error=True)
 
     if not est_authentifie_user():
-        # Afficher le formulaire d'authentification si l'utilisateur n'est pas authentifié
         return render_template('formulaire_authentification_user.html', error=False)
     
-    # Si l'utilisateur est authentifié
-    return "<h2>Bienvenue sur la page fiche_nom</h2>"
-
+    return render_template('formulaire_recherche.html')
 if __name__ == "__main__":
   app.run(debug=True)
