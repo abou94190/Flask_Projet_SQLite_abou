@@ -84,7 +84,7 @@ def fiche_nom():
         return "<h2>Bienvenue sur la page fiche_nom</h2>"
     else:
         # Si les identifiants sont incorrects, demander l'authentification
-        return render_template('formulaire.html'), 401
+        return render_template('formulaire_authentification.html'), 401
 
 if __name__ == "__main__":
   app.run(debug=True)
