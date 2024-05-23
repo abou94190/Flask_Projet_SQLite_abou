@@ -77,13 +77,18 @@ def enregistrer_client():
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
 
-@app.route('/fiche_nom/')
+@app.route('/fiche_nom', methods=['GET', 'POST'])
 def fiche_nom():
-    if request.authorization and request.authorization.username == 'user' and request.authorization.password == '12345':
-        # Si l'utilisateur est authentifié avec les bons identifiants
-        return "<h2>Bienvenue sur la page fiche_nom</h2>"
-    else:
-        # Si les identifiants sont incorrects, demander l'authentification
-        return render_template('formulaire_authentification.html'), 401
+    if request.method == 'POST':
+        # Vérifier les identifiants
+        if request.form['username'] == 'user' and request.form['password'] == '12345':
+            session['authentifie'] = True
+            return "<h2>Bienvenue sur la page fiche_nom</h2>"
+        else:
+            # Afficher un message d'erreur si les identifiants sont incorrects
+            return render_template('formulaire_authentification.html', error=True)
+
+    # Afficher le formulaire d'authentification si la méthode est GET
+    return render_template('formulaire_authentification.html', error=False)
 if __name__ == "__main__":
   app.run(debug=True)
