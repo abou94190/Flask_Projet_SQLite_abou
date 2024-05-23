@@ -79,12 +79,18 @@ def enregistrer_client():
 
 @app.route('/fiche_nom/')
 def fiche_nom():
-    if request.authorization and request.authorization.username == 'user' and request.authorization.password == '12345':
-        # Si l'utilisateur est authentifié avec les bons identifiants
-        return "<h2>Bienvenue sur la page fiche_nom</h2>"
-    else:
-        # Si les identifiants sont incorrects, demander l'authentification
-        return render_template('formulaire_authentification.html'), 401
+    nom = request.form['Utilisateur']
+    prenom = request.form['Mot de Passe']
+
+    # Connexion à la base de données
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Exécution de la requête SQL pour insérer un nouveau client
+    cursor.execute('INSERT INTO clients (created, Utilisateur, Mot de Passe, adresse) VALUES (?, ?, ?, ?)', (1002938, nom, prenom, "nouveauclient"))
+    conn.commit()
+    conn.close()
+        return redirect('/consultation/'), 401
 
 if __name__ == "__main__":
   app.run(debug=True)
