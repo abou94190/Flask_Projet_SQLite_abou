@@ -76,7 +76,6 @@ def enregistrer_client():
     conn.commit()
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
-
 @app.route('/fiche_nom', methods=['GET', 'POST'])
 def fiche_nom():
     if request.method == 'POST':
